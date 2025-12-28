@@ -1,0 +1,17 @@
+{
+  "name": "beyondchats-blog-scraper",
+  "version": "1.0.0",
+  "description": "this scraper will fetch the last 5 blogs from the beyondchats website and save them in mongodb",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.3",
+    "mongoose": "^9.0.2"
+  }
+}
