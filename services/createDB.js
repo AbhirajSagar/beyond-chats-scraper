@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-async function getDb()
+export default async function getDb()
 {
     try
     {
@@ -10,6 +10,6 @@ async function getDb()
     catch(err)
     {
         console.error('Error while connecting to database', err);
-        throw new Error(err);
+        throw err;
     }
 }

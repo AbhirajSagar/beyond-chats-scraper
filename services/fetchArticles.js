@@ -1,10 +1,74 @@
 import * as cheerio from 'cheerio';
+import getDb from '../services/createDB.js';
+import Article from '../models/Article.js';
 
 const SITE_BLOGS_URL = 'https://beyondchats.com/blogs/page/';
 const MAX_ATTEMPTS = 85;
 const ARTICLES_NEEDED = 5;
 
-export async function fetchArticles(requiredArticles = null)
+export async function updateArticles()
+{
+    try
+    {
+        //Sample Link -> https://beyondchats.com/blogs/introduction-to-chatbots/
+        const articlesLinks = await fetchArticles();
+        const articles = [];
+
+        for(const articleLink of articlesLinks)
+        {
+            const article = {};
+            const content = await getContent(articleLink);
+            article.url = articleLink.split('blogs')[1].replace('/','');
+            article.content = content;
+            articles.push(article);
+        }
+
+        console.log('Articles: ', articles);
+
+        const db = await getDb();
+        for(const article of articles)
+        {
+            const existingArticle = await Article.findOne({url: article.url});
+            if(!existingArticle)
+            {
+                const newArticle = new Article(article);
+                await newArticle.save();
+            }
+            else
+            {
+                await Article.findOneAndUpdate({url: article.url}, article);
+            }
+        }
+    }
+    catch(err)
+    {
+        console.error('Error while updating oldest articles from beyondchat.com to the db', err);
+        throw err;
+    }
+}
+
+async function getContent(url)
+{
+    try
+    {
+        const response = await fetch(url);
+        const html = await response.text();
+        const $ = cheerio.load(html);
+        
+        const mainContentContainer = $('#content');
+        const content = mainContentContainer.find('p');
+        const contentText = content.text();
+
+        return contentText;
+    }
+    catch(err)
+    {
+        console.error('Error while fetching content for page ' + url, err);
+        throw err;
+    }
+}
+
+async function fetchArticles(requiredArticles = null)
 {
     try
     {
@@ -23,7 +87,7 @@ export async function fetchArticles(requiredArticles = null)
     catch(err)
     {
         console.error('Error while fetching articles', err);
-        throw new Error(err);
+        throw err;
     }
 }
 
@@ -52,7 +116,7 @@ async function getBlogLinks(pageNum)
     catch(err)
     {
         console.error('Error while fetching articles', err);
-        throw new Error(err);
+        throw err;
     }
 }
 
@@ -66,8 +130,8 @@ async function fetchBlogPage(pageNumber)
     }
     catch(err)
     {
-        console.error(`Error occured while fetching blogs on page ${pageNum} `,err);
-        throw new Error(err);
+        console.error(`Error occured while fetching blogs on page ${pageNumber} `,err);
+        throw err;
     }
 }
 
@@ -104,6 +168,6 @@ async function getLastPageNum()
     catch(err)
     {
         console.error('Error while finding the last page', err);
-        throw new Error(err);
+        throw err;
     }
 }
