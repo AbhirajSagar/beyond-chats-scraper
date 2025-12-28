@@ -80,7 +80,8 @@ async function getLastPageNum()
     {
         while(true)
         {
-            console.log(`Fetching Blogs Page #${pageNum}`);
+            console.clear();
+            console.log(`Trying to check if blogs page #${pageNum} is last...`);
             const html = await fetchBlogPage(pageNum);
             const $ = cheerio.load(html);
 
@@ -88,8 +89,12 @@ async function getLastPageNum()
             const articlesCount = articles?.length || 0;
             console.log(`Total Blogs : ${articlesCount}`);
 
-            if(articlesCount == 0) 
+            if(articlesCount == 0)
+            {
+                console.clear();
+                console.log('Last Page Found: ', pageNum - 1);
                 return pageNum - 1;
+            } 
 
             pageNum++;
             if(pageNum > MAX_ATTEMPTS)
