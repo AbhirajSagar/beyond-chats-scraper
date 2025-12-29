@@ -37,4 +37,5 @@ You'll need nodejs and npm installed on your system.
 
 1. Clone the repo
 2. Run the command to install the required packages : **npm install**
-3. Run the command to start the server : **node .**
+3. Create a '.env' file and add the mongodb uri there under the variable name "MONGO_URI"
+4. Run the command to start the server : **node .**
