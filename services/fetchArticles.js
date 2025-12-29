@@ -17,9 +17,10 @@ export async function updateArticles()
         for(const articleLink of articlesLinks)
         {
             const article = {};
-            const content = await getContent(articleLink);
+            const {title, contentText} = await getContent(articleLink);
             article.url = articleLink;
-            article.content = content;
+            article.title = title;
+            article.content = contentText;
             articles.push(article);
         }
 
@@ -55,11 +56,13 @@ async function getContent(url)
         const html = await response.text();
         const $ = cheerio.load(html);
         
+        const main = $('main');
+        const title = main.find('h1').text();
         const mainContentContainer = $('#content');
         const content = mainContentContainer.find('p');
         const contentText = content.text();
 
-        return contentText;
+        return {title,contentText};
     }
     catch(err)
     {
