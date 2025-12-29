@@ -1,9 +1,25 @@
 import express from 'express';
 import Article from '../models/Article.js';
 import getDb from '../services/createDB.js';
-import {updateArticles} from '../services/fetchArticles.js';
 
 const router = express.Router();
+
+router.get('/read/all', async (req,res) => 
+{
+    try
+    {
+        const db = await getDb();
+        const articles = await Article.find();
+        if(!articles) return res.status(404).json({message: 'No articles found'});
+
+        return res.status(200).json({articles});
+    }
+    catch(err)
+    {
+        console.log('Error while receiving all the blogs');
+        return res.status(500).json({message: 'Internal Server Error'});
+    }
+});
 
 router.get('/read/:url', async (req, res) => 
 {
@@ -21,32 +37,6 @@ router.get('/read/:url', async (req, res) =>
     catch(err)
     {
         console.log('Error while trying to read article',err);
-        return res.status(500).json({message: 'Internal Server Error'});
-    }
-});
-
-
-router.get('/read/all', async (req,res) => 
-{
-    try
-    {
-        console.log('reading all');
-        const newScrapeNeeded = req.query.update === 'true';
-        if(newScrapeNeeded) 
-        {
-            console.log('Updating articles');
-            await updateArticles();
-        }
-
-        const db = await getDb();
-        const articles = await Article.find();
-        if(!articles) return res.status(404).json({message: 'No articles found'});
-
-        return res.status(200).json({articles});
-    }
-    catch(err)
-    {
-        console.log('Error while receiving all the blogs');
         return res.status(500).json({message: 'Internal Server Error'});
     }
 });
