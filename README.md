@@ -31,3 +31,10 @@ If not we keep moving to the previous page and collecting more blog links.
 
 ## CRON Scheduler
 The function to scrape and update the db with the blog's oldest article content, has been also scheduled with cron scheduler for being executed automatically everyday.
+
+## Setup
+You'll need nodejs and npm installed on your system.
+
+1. Clone the repo
+2. Run the command to install the required packages : **npm install**
+3. Run the command to start the server : **node .**
