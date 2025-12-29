@@ -38,3 +38,6 @@ You'll need nodejs and npm installed on your system.
 1. Clone the repo
 2. Run the command to install the required packages : **npm install**
 3. Run the command to start the server : **node .**
+
+## Manual Update
+Use the command **node updateArticles.js** to manually update the db from scraped data instead of waiting for cron on the server.

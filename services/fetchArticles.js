@@ -18,7 +18,7 @@ export async function updateArticles()
         {
             const article = {};
             const content = await getContent(articleLink);
-            article.url = articleLink.split('/blogs/')[1]?.replace(/^\/+/, '');
+            article.url = articleLink;
             article.content = content;
             articles.push(article);
         }
